@@ -17,9 +17,13 @@ var addBillField = graphql.Field{
 			Type:        graphql.NewNonNull(graphql.String),
 		},
 		"time": &graphql.ArgumentConfig{
-			Description:  "站单时间",
+			Description:  "账单时间",
 			Type:         graphql.Int,
 			DefaultValue: time.Now().UnixNano() / 1e6,
+		},
+		"payment": &graphql.ArgumentConfig{
+			Description: "支出账户",
+			Type:        graphql.NewNonNull(graphql.String),
 		},
 		"amount": &graphql.ArgumentConfig{
 			Description: "账单金额",
@@ -38,10 +42,24 @@ var addBillField = graphql.Field{
 	Resolve: func(p graphql.ResolveParams) (interface{}, error) {
 		id := p.Args["id"].(string)
 		time := p.Args["time"].(int64)
-		amount := p.Args["amount"].(int64)
+		payment := p.Args["payment"].(string)
+		amount := int64(p.Args["amount"].(int))
 		class := p.Args["class"].(int)
 		remark := p.Args["remark"].(string)
 
-		return nil, nil
+		bill := &model.Bill{
+			ID:      bson.NewObjectId(),
+			Payment: payment,
+			Time:    time,
+			Amount:  amount,
+			Class:   class,
+			Remake:  remark,
+		}
+
+		err := db.AddBill(id, bill)
+		if err != nil {
+			return false, err
+		}
+		return true, nil
 	},
 }

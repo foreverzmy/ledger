@@ -7,8 +7,8 @@ import (
 
 // AddBill 添加账单
 func AddBill(id string, bill *model.Bill) error {
-	err := C.UpdateId(bson.ObjectIdHex(id), bson.M{"push": bson.M{
-		"bill": bill,
+	err := C.UpdateId(bson.ObjectIdHex(id), bson.M{"$push": bson.M{
+		"bills": bill,
 	}})
 	return err
 }

@@ -21,5 +21,5 @@ func main() {
 		h.ContextHandler(ctx, w, r)
 	})
 
-	http.ListenAndServe(":8099", nil)
+	http.ListenAndServe("127.0.0.1:8099", nil)
 }

@@ -6,7 +6,8 @@ import (
 
 // Bill 账单
 type Bill struct {
-	Payment bson.ObjectId // 支出账户
+	ID      bson.ObjectId `bson:"_id"`
+	Payment string        // 支出账户
 	Time    int64         // 时间
 	Amount  int64         // 金额
 	Class   int           // 支出类型

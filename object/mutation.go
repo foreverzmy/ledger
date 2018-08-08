@@ -8,5 +8,6 @@ var mutationType = graphql.NewObject(graphql.ObjectConfig{
 	Fields: graphql.Fields{
 		"addAccount": &addAccountField,
 		"addAssets":  &addAssetsField,
+		"addBill":    &addBillField,
 	},
 })

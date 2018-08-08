@@ -13,24 +13,25 @@ var addAssetsField = graphql.Field{
 	Args: graphql.FieldConfigArgument{
 		"id": &graphql.ArgumentConfig{
 			Description: "账户 id",
-			Type:        graphql.String,
+			Type:        graphql.NewNonNull(graphql.String),
 		},
 		"name": &graphql.ArgumentConfig{
 			Description: "资产名",
-			Type:        graphql.String,
+			Type:        graphql.NewNonNull(graphql.String),
 		},
 		"icon": &graphql.ArgumentConfig{
-			Description: "图标",
-			Type:        graphql.String,
+			Description:  "图标",
+			Type:         graphql.String,
+			DefaultValue: "",
 		},
 		"amount": &graphql.ArgumentConfig{
 			Description:  "资产数",
 			DefaultValue: 0,
-			Type:         graphql.Int,
+			Type:         graphql.NewNonNull(graphql.Int),
 		},
 		"class": &graphql.ArgumentConfig{
 			Description: "资产类型",
-			Type:        graphql.Int,
+			Type:        graphql.NewNonNull(graphql.Int),
 		},
 	},
 	Resolve: func(p graphql.ResolveParams) (interface{}, error) {
