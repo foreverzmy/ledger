@@ -13,7 +13,6 @@
       "port": 8099,
       "host": "127.0.0.1",
       "program": "${workspaceRoot}/main.go",
-      "env": {"GOPATH":"/Users/zhangmingyuan/go"},
       "args": [],
       "showLog": true
     }

@@ -8,9 +8,16 @@ import (
 
 // AddAssets 添加资产
 func AddAssets(id string, assets *model.Assets) error {
-	err := C.UpdateId(bson.ObjectIdHex(id), bson.M{"$push": bson.M{
-		"assets": assets,
+
+	err := AssetsC.Insert(assets)
+	if err != nil {
+		return err
+	}
+
+	err = AccountC.UpdateId(bson.ObjectIdHex(id), bson.M{"$addToSet": bson.M{
+		"assets": assets.ID,
 	}})
+
 	return err
 }
 
@@ -18,7 +25,7 @@ func AddAssets(id string, assets *model.Assets) error {
 func GetAssets(id bson.ObjectId) (model.Assets, error) {
 	assets := model.Assets{}
 
-	err := C.FindId(id).One(&assets)
+	err := AssetsC.FindId(id).One(&assets)
 
 	return assets, err
 }
