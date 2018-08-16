@@ -22,7 +22,7 @@ func AddAccount(name string, avatar string) error {
 // GetAccount 获取账户信息
 func GetAccount(id string) (interface{}, error) {
 	account := model.Account{}
-	err := AccountC.FindId(id).One(&account)
+	err := AccountC.FindId(bson.ObjectIdHex(id)).One(&account)
 	if err != nil {
 		return nil, err
 	}

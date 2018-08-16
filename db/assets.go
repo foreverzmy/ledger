@@ -22,10 +22,11 @@ func AddAssets(id string, assets *model.Assets) error {
 }
 
 // GetAssets 获取资产
-func GetAssets(id bson.ObjectId) (model.Assets, error) {
-	assets := model.Assets{}
+func GetAssets() ([]model.Assets, error) {
+	assets := []model.Assets{}
 
-	err := AssetsC.FindId(id).One(&assets)
+	// err := AssetsC.FindId(id).One(&assets)
+	err := AssetsC.Find(bson.M{}).All(&assets)
 
 	return assets, err
 }

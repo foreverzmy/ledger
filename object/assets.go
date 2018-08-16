@@ -1,6 +1,7 @@
 package object
 
 import (
+	"fmt"
 	"github.com/foreverzmy/ledger/db"
 	"github.com/foreverzmy/ledger/model"
 	"github.com/globalsign/mgo/bson"
@@ -54,5 +55,48 @@ var addAssetsField = graphql.Field{
 			return false, err
 		}
 		return true, nil
+	},
+}
+
+var queryAssetsField = graphql.Field{
+	Description: "用户资产",
+	Type: graphql.NewList(
+		graphql.NewObject(graphql.ObjectConfig{
+			Name: "assets",
+			Fields: graphql.Fields{
+				"id": &graphql.Field{
+					Description: "资产 ID",
+					Type:        graphql.String,
+				},
+				"name": &graphql.Field{
+					Description: "资产名",
+					Type:        graphql.String,
+				},
+				"icon": &graphql.Field{
+					Description: "图标",
+					Type:        graphql.String,
+				},
+				"amount": &graphql.Field{
+					Description: "资产数",
+					Type:        graphql.Int,
+				},
+				"class": &graphql.Field{
+					Description: "资产类型",
+					Type:        graphql.String,
+				},
+			},
+		},
+		),
+	),
+	Args: graphql.FieldConfigArgument{
+		"id": &graphql.ArgumentConfig{
+			Description: "资产 ID",
+			Type:        graphql.String,
+		},
+	},
+	Resolve: func(p graphql.ResolveParams) (interface{}, error) {
+		fmt.Println(p.Args)
+		assetsList, err := db.GetAssets()
+		return assetsList, err
 	},
 }

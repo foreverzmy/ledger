@@ -29,3 +29,40 @@ var addAccountField = graphql.Field{
 		return true, nil
 	},
 }
+
+var queryAccountField = graphql.Field{
+	Description: "获取指定用户的信息",
+	Type: graphql.NewObject(graphql.ObjectConfig{
+		Name:        "account",
+		Description: "用户信息描述",
+		Fields: graphql.Fields{
+			"_id": &graphql.Field{
+				Description: "用户名称",
+				Type:        graphql.String,
+			},
+			"name": &graphql.Field{
+				Description: "用户密码",
+				Type:        graphql.String,
+			},
+			"avatar": &graphql.Field{
+				Description: "用户头像",
+				Type:        graphql.String,
+			},
+			"assets": &queryAssetsField,
+		},
+	}),
+	Args: graphql.FieldConfigArgument{
+		"id": &graphql.ArgumentConfig{
+			Description: "账户ID",
+			Type:        graphql.NewNonNull(graphql.String),
+		},
+	},
+	Resolve: func(p graphql.ResolveParams) (interface{}, error) {
+		id := p.Args["id"].(string)
+		res, err := db.GetAccount(id)
+		if err != nil {
+			return false, err
+		}
+		return res, nil
+	},
+}
