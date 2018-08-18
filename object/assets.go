@@ -1,7 +1,6 @@
 package object
 
 import (
-	"fmt"
 	"github.com/foreverzmy/ledger/db"
 	"github.com/foreverzmy/ledger/model"
 	"github.com/globalsign/mgo/bson"
@@ -58,33 +57,56 @@ var addAssetsField = graphql.Field{
 	},
 }
 
-var queryAssetsField = graphql.Field{
+var assetField = graphql.Fields{
+	"id": &graphql.Field{
+		Description: "资产 ID",
+		Type:        graphql.String,
+	},
+	"name": &graphql.Field{
+		Description: "资产名",
+		Type:        graphql.String,
+	},
+	"icon": &graphql.Field{
+		Description: "图标",
+		Type:        graphql.String,
+	},
+	"amount": &graphql.Field{
+		Description: "资产数",
+		Type:        graphql.Int,
+	},
+	"class": &graphql.Field{
+		Description: "资产类型",
+		Type:        graphql.String,
+	},
+}
+
+var queryAssetField = graphql.Field{
 	Description: "用户资产",
+	Type: graphql.NewObject(graphql.ObjectConfig{
+		Name:   "asset",
+		Fields: assetField,
+	}),
+	Args: graphql.FieldConfigArgument{
+		"id": &graphql.ArgumentConfig{
+			Description: "资产 ID",
+			Type:        graphql.NewNonNull(graphql.String),
+		},
+	},
+	Resolve: func(p graphql.ResolveParams) (interface{}, error) {
+		id := p.Args["id"].(string)
+
+		asset, err := db.GetAsset(id)
+
+		return asset, err
+	},
+}
+
+var queryAssetsField = graphql.Field{
+	Description: "用户资产列表",
 	Type: graphql.NewList(
 		graphql.NewObject(graphql.ObjectConfig{
-			Name: "assets",
-			Fields: graphql.Fields{
-				"id": &graphql.Field{
-					Description: "资产 ID",
-					Type:        graphql.String,
-				},
-				"name": &graphql.Field{
-					Description: "资产名",
-					Type:        graphql.String,
-				},
-				"icon": &graphql.Field{
-					Description: "图标",
-					Type:        graphql.String,
-				},
-				"amount": &graphql.Field{
-					Description: "资产数",
-					Type:        graphql.Int,
-				},
-				"class": &graphql.Field{
-					Description: "资产类型",
-					Type:        graphql.String,
-				},
-			},
+			Name:   "assets",
+			Fields: assetField,
 		},
 		),
 	),
@@ -95,7 +117,6 @@ var queryAssetsField = graphql.Field{
 		},
 	},
 	Resolve: func(p graphql.ResolveParams) (interface{}, error) {
-		fmt.Println(p.Args)
 		assetsList, err := db.GetAssets()
 		return assetsList, err
 	},

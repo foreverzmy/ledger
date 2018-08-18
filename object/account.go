@@ -31,7 +31,7 @@ var addAccountField = graphql.Field{
 }
 
 var queryAccountField = graphql.Field{
-	Description: "获取指定用户的信息",
+	Description: "获取指定用户的某个资产信息",
 	Type: graphql.NewObject(graphql.ObjectConfig{
 		Name:        "account",
 		Description: "用户信息描述",
@@ -48,7 +48,9 @@ var queryAccountField = graphql.Field{
 				Description: "用户头像",
 				Type:        graphql.String,
 			},
+			"asset":  &queryAssetField,
 			"assets": &queryAssetsField,
+			"bill":   &queryBillField,
 		},
 	}),
 	Args: graphql.FieldConfigArgument{

@@ -52,10 +52,10 @@ func AddBill(id string, bill *model.Bill) error {
 }
 
 // GetBill 获取账单
-func GetBill(id bson.ObjectId) (model.Bill, error) {
+func GetBill(id string) (model.Bill, error) {
 	bill := model.Bill{}
 
-	err := BillC.FindId(id).One(&bill)
+	err := BillC.FindId(bson.ObjectIdHex(id)).One(&bill)
 
 	return bill, err
 }

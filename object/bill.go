@@ -1,11 +1,12 @@
 package object
 
 import (
+	"time"
+
 	"github.com/foreverzmy/ledger/db"
 	"github.com/foreverzmy/ledger/model"
 	"github.com/globalsign/mgo/bson"
 	"github.com/graphql-go/graphql"
-	"time"
 )
 
 var addBillField = graphql.Field{
@@ -53,7 +54,7 @@ var addBillField = graphql.Field{
 			Time:    time,
 			Amount:  amount,
 			Class:   class,
-			Remake:  remark,
+			Remark:  remark,
 		}
 
 		err := db.AddBill(id, bill)
@@ -63,3 +64,69 @@ var addBillField = graphql.Field{
 		return true, nil
 	},
 }
+
+var billField = graphql.Fields{
+	"id": &graphql.Field{
+		Description: "账单 ID",
+		Type:        graphql.String,
+	},
+	"payment": &graphql.Field{
+		Description: "支出账户",
+		Type:        graphql.String,
+	},
+	"time": &graphql.Field{
+		Description: "创建时间",
+		Type:        graphql.Int,
+	},
+	"amount": &graphql.Field{
+		Description: "支出金额",
+		Type:        graphql.Int,
+	},
+	"class": &graphql.Field{
+		Description: "账单类型",
+		Type:        graphql.String,
+	},
+	"remark": &graphql.Field{
+		Description: "备注",
+		Type:        graphql.String,
+	},
+}
+
+var queryBillField = graphql.Field{
+	Description: "获取指定用户的某一条账单",
+	Type: graphql.NewObject(graphql.ObjectConfig{
+		Name:   "bill",
+		Fields: billField,
+	}),
+	Args: graphql.FieldConfigArgument{
+		"id": &graphql.ArgumentConfig{
+			Description: "账单 ID",
+			Type:        graphql.NewNonNull(graphql.String),
+		},
+	},
+	Resolve: func(p graphql.ResolveParams) (interface{}, error) {
+		id := p.Args["id"].(string)
+
+		bill, err := db.GetBill(id)
+
+		return bill, err
+	},
+}
+
+// var queryBillsField = graphql.Field{
+// 	Description: "账单列表",
+// 	Type:graphql.NewList(
+// 		graphql.NewObject(graphql.ObjectConfig{
+// 			Name:"bills",
+// 			Fields:graphql.Fields{
+// 				"id":&graphql.Field{
+// 					Description:"账单 ID",
+
+// 				},
+// 			},
+// 		})
+// 	),
+// 	Args:graphql.FieldArgument{
+
+// 	}
+// }

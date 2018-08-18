@@ -4,11 +4,11 @@ import "github.com/globalsign/mgo/bson"
 
 // Assets 资产
 type Assets struct {
-	ID     bson.ObjectId `bson:"_id"`
-	Name   string        `json:"name" bson:"name"`   // 资产名
-	Icon   string        `json:"icon" bson:"icon"`   // 图标
+	ID     bson.ObjectId `json:"id" bson:"_id"`
+	Name   string        `json:"name" bson:"name"`     // 资产名
+	Icon   string        `json:"icon" bson:"icon"`     // 图标
 	Amount int64         `json:"amount" bson:"amount"` // 资产数
-	Class  AssetsTypes   `json:"class" bson:"class"`  // 资产类型
+	Class  AssetsTypes   `json:"class" bson:"class"`   // 资产类型
 }
 
 // AssetsTypes 资产类型

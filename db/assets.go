@@ -21,7 +21,14 @@ func AddAssets(id string, assets *model.Assets) error {
 	return err
 }
 
-// GetAssets 获取资产
+// GetAsset 获取资产
+func GetAsset(id string) (model.Assets, error) {
+	asset := model.Assets{}
+	err := AssetsC.FindId(bson.ObjectIdHex(id)).One(&asset)
+	return asset, err
+}
+
+// GetAssets 获取资产列表
 func GetAssets() ([]model.Assets, error) {
 	assets := []model.Assets{}
 
