@@ -1,6 +1,7 @@
 package object
 
 import (
+	"errors"
 	"time"
 
 	"github.com/foreverzmy/ledger/db"
@@ -106,6 +107,20 @@ var queryBillField = graphql.Field{
 	},
 	Resolve: func(p graphql.ResolveParams) (interface{}, error) {
 		id := p.Args["id"].(string)
+
+		account := p.Source.(model.Account)
+
+		billInAccount := false
+		for _, billID := range account.Bills {
+			if billID.Hex() == id {
+				billInAccount = true
+				break
+			}
+		}
+
+		if !billInAccount {
+			return nil, errors.New("该账单不属于用户")
+		}
 
 		bill, err := db.GetBill(id)
 

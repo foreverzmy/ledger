@@ -1,6 +1,8 @@
 package object
 
 import (
+	"errors"
+
 	"github.com/foreverzmy/ledger/db"
 	"github.com/foreverzmy/ledger/model"
 	"github.com/globalsign/mgo/bson"
@@ -94,6 +96,20 @@ var queryAssetField = graphql.Field{
 	},
 	Resolve: func(p graphql.ResolveParams) (interface{}, error) {
 		id := p.Args["id"].(string)
+
+		account := p.Source.(model.Account)
+
+		assetInAccount := false
+		for _, assetID := range account.Assets {
+			if assetID.Hex() == id {
+				assetInAccount = true
+				break
+			}
+		}
+
+		if !assetInAccount {
+			return nil, errors.New("该资产不属于用户")
+		}
 
 		asset, err := db.GetAsset(id)
 
